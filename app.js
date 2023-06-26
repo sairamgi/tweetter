@@ -22,6 +22,7 @@ const initializeDBAndServer = async () => {
     });
   } catch (e) {
     console.log(e.message);
+    process.exit(1);
   }
 };
 
@@ -57,7 +58,7 @@ const authenticateToken = (request, response, next) => {
   }
 };
 
-app.post("/register", async (request, response) => {
+app.post("/register/", async (request, response) => {
   const { username, password, name, gender } = request.body;
   const selectUserQuery = `SELECT * FROM user WHERE username = '${username}';`;
   console.log(username, password, name, gender);
@@ -152,7 +153,7 @@ app.get("/user/following", authenticateToken, async (request, response) => {
   response.send(userFollowsArray);
 });
 
-app.get("/user/followers", authenticateToken, async (request, response) => {
+app.get("/user/followers/", authenticateToken, async (request, response) => {
   const { payload } = request;
   const { user_id, name, username, gender } = payload;
   console.log(name);
@@ -231,7 +232,7 @@ app.get(
             WHERE 
                 tweet.tweet_id=${tweetId} AND follower.follower_user_id = ${user_id}
             ;`;
-    const likedUsers = await db.all(getLikedUsers   Query);
+    const likedUsers = await db.all(getLikedUsersQuery);
     console.log(likedUsers);
     if (likedUsers.length !== 0) {
       let likes = [];
@@ -250,7 +251,7 @@ app.get(
 );
 
 app.get(
-  "/tweets/:tweetId/replies",
+  "/tweets/:tweetId/replies/",
   authenticateToken,
   async (request, response) => {
     const { payload } = request;
@@ -322,7 +323,7 @@ app.post("/user/tweets", authenticateToken, async (request, response) => {
             tweet(tweet,user_id)
         VALUES(
             '${tweet}',
-            '${user_id}'
+            ${user_id}
         )
         ;`;
   await db.run(postTweetQuery);
