@@ -77,7 +77,7 @@ app.post("/register/", async (request, response) => {
                         '${name}',
                         '${username}',
                         '${hashedPassword}',
-                        '${gender}',
+                        '${gender}'
                     )  
                     ; `;
 
